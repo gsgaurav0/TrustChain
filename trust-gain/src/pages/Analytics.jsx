@@ -31,9 +31,29 @@ const Analytics = () => {
   // Monthly trend (simulated)
   const monthlyTrend = [
     { month: 'Jan', amount: 0.5 },
-    { month: 'Feb', amount: 1.2 },
-    { month: 'Mar', amount: 0.8 }
+    { month: 'Feb', amount: 0.8 },
+    { month: 'Mar', amount: 1.2 },
+    { month: 'Apr', amount: 0.9 },
+    { month: 'May', amount: 1.7 },
+    { month: 'Jun', amount: 1.4 },
+    { month: 'Jul', amount: 2.3 }
   ];
+
+  const maxAmount = Math.max(...monthlyTrend.map(d => d.amount));
+  
+  const generatePath = () => {
+    if (monthlyTrend.length === 0) return "";
+    let path = `M 2,${90 - (monthlyTrend[0].amount / maxAmount) * 80}`;
+    for (let i = 0; i < monthlyTrend.length - 1; i++) {
+        const x1 = 2 + (i / (monthlyTrend.length - 1)) * 96;
+        const y1 = 90 - (monthlyTrend[i].amount / maxAmount) * 80;
+        const x2 = 2 + ((i + 1) / (monthlyTrend.length - 1)) * 96;
+        const y2 = 90 - (monthlyTrend[i + 1].amount / maxAmount) * 80;
+        const cx = (x1 + x2) / 2;
+        path += ` C ${cx},${y1} ${cx},${y2} ${x2},${y2}`;
+    }
+    return path;
+  };
 
   return (
     <div className="min-h-screen pt-24 pb-20">
@@ -120,38 +140,92 @@ const Analytics = () => {
             variants={variants.item}
             className="bg-white/5 backdrop-blur-glass border border-white/10 rounded-2xl overflow-hidden p-8 space-y-6"
           >
-            <h3 className="text-2xl font-bold flex items-center gap-3">
+            <h3 className="text-2xl font-bold flex items-center gap-3 mb-6">
               <TrendingUp size={24} className="text-accent-100" />
               Monthly Donation Trend
             </h3>
 
-            <div className="space-y-6">
-              {monthlyTrend.map((item, i) => (
-                <div key={i} className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <p className="text-sm font-semibold text-gray-300">{item.month}</p>
-                    <p className="text-sm font-bold text-accent-100">{item.amount} ETH</p>
-                  </div>
-                  <div className="w-full bg-white/10 rounded-full h-3 overflow-hidden">
-                    <motion.div
-                      className="h-full bg-gradient-to-r from-accent-500 to-accent-600"
-                      initial={{ width: 0 }}
-                      animate={{ width: `${(item.amount / 2) * 100}%` }}
-                      transition={{ delay: 0.3 + i * 0.1, duration: 1 }}
+            {/* Analog Oscilloscope Style Graph */}
+            <div className="relative w-full h-64 bg-[#050f0a] rounded-xl border border-white/10 overflow-hidden shadow-[inset_0_0_20px_rgba(0,0,0,0.8)]">
+              {/* CRT Inner Shadow */}
+              <div className="absolute inset-0 shadow-[inset_0_0_50px_rgba(0,0,0,1)] z-10 pointer-events-none" />
+              
+              {/* Analog Grid */}
+              <div className="absolute inset-0 bg-[linear-gradient(rgba(0,255,100,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(0,255,100,0.05)_1px,transparent_1px)] bg-[size:20px_20px]" />
+              <div className="absolute inset-0 bg-[linear-gradient(rgba(0,255,100,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(0,255,100,0.1)_1px,transparent_1px)] bg-[size:100px_100px]" />
+
+              {/* Data Plot */}
+              <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <defs>
+                  <filter id="glow">
+                    <feGaussianBlur stdDeviation="1.5" result="coloredBlur"/>
+                    <feMerge>
+                      <feMergeNode in="coloredBlur"/>
+                      <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+                  </filter>
+                </defs>
+                <motion.path
+                  d={generatePath()}
+                  fill="none"
+                  stroke="#00ff66"
+                  strokeWidth="0.8"
+                  filter="url(#glow)"
+                  initial={{ pathLength: 0 }}
+                  animate={{ pathLength: 1 }}
+                  transition={{ duration: 2, ease: "easeInOut" }}
+                  vectorEffect="non-scaling-stroke"
+                />
+                
+                {monthlyTrend.map((item, i) => {
+                  const x = 2 + (i / (monthlyTrend.length - 1)) * 96;
+                  const y = 90 - (item.amount / maxAmount) * 80;
+                  return (
+                    <motion.circle
+                      key={i}
+                      cx={x}
+                      cy={y}
+                      r="1.5"
+                      fill="#00ff66"
+                      filter="url(#glow)"
+                      initial={{ scale: 0, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ delay: 1.5 + i * 0.1, duration: 0.3 }}
+                      vectorEffect="non-scaling-stroke"
                     />
+                  );
+                })}
+              </svg>
+
+              {/* X-axis Labels */}
+              <div className="absolute bottom-2 left-0 right-0 flex justify-between px-4 z-20">
+                {monthlyTrend.map((item, i) => (
+                  <div key={i} className="text-[10px] font-mono text-[#00ff66] opacity-70">
+                    {item.month}
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
+
+              {/* Tooltip-like value display for latest */}
+              <div className="absolute top-4 right-4 text-right z-20">
+                <p className="text-[10px] font-mono text-[#00ff66] opacity-70">CURRENT</p>
+                <p className="text-sm font-mono text-[#00ff66] font-bold shadow-green-500 drop-shadow-md">
+                  {monthlyTrend[monthlyTrend.length - 1].amount.toFixed(2)} ETH
+                </p>
+              </div>
+              
+              {/* Scanline Effect */}
+              <div className="absolute inset-0 bg-[#00ff66] opacity-[0.02] mix-blend-overlay pointer-events-none" style={{ background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, #00ff66 2px, #00ff66 4px)'}}/>
             </div>
 
             <motion.div
-              className="p-4 bg-accent-500/10 border border-accent-500/20 rounded-lg mt-4"
+              className="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-lg mt-6"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6 }}
             >
               <p className="text-sm text-gray-300">
-                📈 <span className="text-accent-100 font-semibold">60% increase</span> in donations this month
+                📈 <span className="text-emerald-400 font-semibold">60% increase</span> in donations this month
               </p>
             </motion.div>
           </motion.div>

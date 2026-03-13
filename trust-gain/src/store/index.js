@@ -8,12 +8,47 @@ const useStore = create((set) => ({
   walletAddress: null,
   walletBalance: 0,
   
-  connectWallet: () => set({
-    walletConnected: true,
-    walletAddress: '0x742d35Cc6634C0532925a3b844Bc9e7595f42D5',
-    walletBalance: 2.5
-  }),
+  connectWallet: async () => {
+    if (typeof window.ethereum !== 'undefined') {
+      try {
+        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        const address = accounts[0];
+        
+        const balanceHex = await window.ethereum.request({ 
+          method: 'eth_getBalance', 
+          params: [address, 'latest'] 
+        });
+        const balance = parseInt(balanceHex, 16) / 1e18;
+
+        set({
+          walletConnected: true,
+          walletAddress: address,
+          walletBalance: balance
+        });
+      } catch (error) {
+        console.error("Wallet connection failed:", error);
+      }
+    } else {
+      alert("Please install a Web3 wallet (like MetaMask) to connect.");
+    }
+  },
   
+  initWalletListeners: () => {
+    if (typeof window.ethereum !== 'undefined') {
+      window.ethereum.on('accountsChanged', (accounts) => {
+        if (accounts.length > 0) {
+          set({ walletAddress: accounts[0], walletConnected: true });
+          // optionally re-fetch balance here
+        } else {
+          set({ walletAddress: null, walletConnected: false, walletBalance: 0 });
+        }
+      });
+      window.ethereum.on('chainChanged', () => {
+        window.location.reload();
+      });
+    }
+  },
+
   disconnectWallet: () => set({
     walletConnected: false,
     walletAddress: null,
@@ -56,6 +91,10 @@ const useStore = create((set) => ({
   addDonation: (donation) => set((state) => ({
     donations: [donation, ...state.donations]
   })),
+  
+  // Checkout state
+  selectedDisaster: null,
+  setSelectedDisaster: (disaster) => set({ selectedDisaster: disaster }),
   
 
   // Disasters state
@@ -111,6 +150,58 @@ const useStore = create((set) => ({
       image: '💧',
       supporters: 654,
       urgency: 'high'
+    },
+    {
+      id: 5,
+      name: 'Ukraine Emergency Relief',
+      location: 'Ukraine',
+      status: 'active',
+      progress: 80,
+      targetAmount: 200,
+      raisedAmount: 160,
+      description: 'Shelter, food, and medical assistance for displaced families',
+      image: '🏘️',
+      supporters: 5432,
+      urgency: 'critical'
+    },
+    {
+      id: 6,
+      name: 'California Wildfire Support',
+      location: 'USA',
+      status: 'active',
+      progress: 55,
+      targetAmount: 120,
+      raisedAmount: 66,
+      description: 'Rebuilding communities and providing emergency housing',
+      image: '🔥',
+      supporters: 1890,
+      urgency: 'high'
+    },
+    {
+      id: 7,
+      name: 'Central Africa Hunger Relief',
+      location: 'Central African Republic',
+      status: 'ongoing',
+      progress: 25,
+      targetAmount: 50,
+      raisedAmount: 12.5,
+      description: 'Nutritional support and sustainable agriculture initiatives',
+      image: '🌾',
+      supporters: 945,
+      urgency: 'critical'
+    },
+    {
+      id: 8,
+      name: 'Global Education Initiative',
+      location: 'Worldwide',
+      status: 'active',
+      progress: 90,
+      targetAmount: 30,
+      raisedAmount: 27,
+      description: 'Providing educational materials and infrastructure',
+      image: '📚',
+      supporters: 3210,
+      urgency: 'medium'
     }
   ],
 

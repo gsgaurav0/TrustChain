@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { ArrowRight, Zap, Lock, Globe } from 'lucide-react';
 import { useAnimationVariants, useNumberAnimation } from '../hooks';
+import { BackgroundPaths } from '@/components/ui/background-paths';
 
 const Landing = ({ onNavigate }) => {
   const variants = useAnimationVariants();
@@ -25,11 +26,10 @@ const Landing = ({ onNavigate }) => {
   ];
 
   return (
-    <div className="min-h-screen pt-20 pb-20 overflow-hidden">
+    <div className="relative min-h-screen pt-20 pb-20 overflow-hidden">
       {/* Background Elements */}
-      <div className="fixed inset-0 -z-10">
-        <div className="absolute top-20 right-10 w-80 h-80 bg-accent-500/10 rounded-full blur-3xl opacity-20" />
-        <div className="absolute bottom-20 left-10 w-60 h-60 bg-accent-500/10 rounded-full blur-3xl opacity-20" />
+      <div className="absolute inset-0 -z-10 pointer-events-none">
+        <BackgroundPaths title="" />
       </div>
 
       <motion.div
@@ -39,7 +39,7 @@ const Landing = ({ onNavigate }) => {
         animate="visible"
       >
         {/* Hero Section */}
-        <div className="grid md:grid-cols-2 gap-12 items-center mb-20">
+        <div className="flex flex-col items-center text-center max-w-4xl mx-auto mb-20">
           <motion.div variants={variants.item} className="space-y-6">
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
@@ -60,8 +60,7 @@ const Landing = ({ onNavigate }) => {
             <p className="text-xl text-gray-400 leading-relaxed">
               Trust Gain revolutionizes humanitarian aid by making every donation transparent, traceable, and directly impactful. See exactly where your funds go.
             </p>
-
-            <div className="flex flex-col sm:flex-row gap-4 pt-4">
+            <div className="flex flex-col sm:flex-row justify-center gap-4 pt-4">
               <motion.button
                 onClick={() => onNavigate('donate')}
                 className="px-6 py-3 bg-accent-500 hover:bg-accent-600 text-white font-semibold rounded-lg transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-glow flex items-center justify-center gap-2 text-lg"
@@ -99,48 +98,6 @@ const Landing = ({ onNavigate }) => {
                   <p className="text-xs text-gray-400">{stat.label}</p>
                 </div>
               ))}
-            </motion.div>
-          </motion.div>
-
-          {/* Hero Image */}
-          <motion.div
-            variants={variants.item}
-            className="relative h-full"
-          >
-            <motion.div
-              className="bg-white/5 backdrop-blur-glass border border-white/10 rounded-2xl overflow-hidden p-8 space-y-6 h-full flex flex-col justify-between"
-              animate={{ y: [0, -20, 0] }}
-              transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-            >
-              <div className="space-y-4">
-                <div className="h-4 bg-gradient-to-r from-accent-500 to-transparent rounded-full opacity-50" />
-                <div className="h-4 bg-gradient-to-r from-accent-500/70 to-transparent rounded-full opacity-50" />
-                <div className="h-4 bg-gradient-to-r from-accent-500/50 to-transparent rounded-full opacity-50" />
-              </div>
-
-              <div className="space-y-3">
-                <p className="text-sm text-gray-400">Latest Donation</p>
-                <motion.div
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-500/20 text-emerald-100 rounded-full text-xs font-semibold border border-emerald-500/30"
-                  initial={{ scale: 0.8 }}
-                  animate={{ scale: 1 }}
-                  transition={{ delay: 0.5 }}
-                >
-                  ✓ Confirmed
-                </motion.div>
-              </div>
-
-              <div className="bg-white/5 backdrop-blur-glass border border-white/10 rounded-lg p-4 space-y-2">
-                <p className="text-xs text-gray-500">Impact Score</p>
-                <div className="w-full bg-white/10 rounded-full h-2 overflow-hidden">
-                  <motion.div
-                    className="h-full bg-gradient-to-r from-accent-500 to-accent-600"
-                    initial={{ width: 0 }}
-                    animate={{ width: '85%' }}
-                    transition={{ delay: 0.3, duration: 1 }}
-                  />
-                </div>
-              </div>
             </motion.div>
           </motion.div>
         </div>

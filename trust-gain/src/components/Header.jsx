@@ -1,27 +1,20 @@
 import { motion } from 'framer-motion';
-import { Menu, X, Wallet, LogOut, Sun, Moon } from 'lucide-react';
+import { Menu, X, Sun, Moon } from 'lucide-react';
 import { useState } from 'react';
 import useStore from '../store';
-import { truncateAddress } from '../hooks';
+import NavMenu from './ui/menu-hover-effects';
 
 const Header = ({ scrollPosition, onNavigate }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { walletConnected, walletAddress, connectWallet, disconnectWallet, theme, toggleTheme } = useStore();
-
-  const handleWalletToggle = () => {
-    if (walletConnected) {
-      disconnectWallet();
-    } else {
-      connectWallet();
-    }
-  };
+  const { toggleTheme, theme } = useStore();
 
   const navItems = [
   { label: 'Dashboard', id: 'dashboard' },
   { label: 'Donate', id: 'donate' },
+  { label: 'Validator', id: 'validator' },
+  { label: 'Beneficiary', id: 'beneficiary' },
   { label: 'Analytics', id: 'analytics' },
-  { label: 'Impact', id: 'impact' },
-  { label: 'Transparency', id: 'transparency' }
+  { label: 'Impact', id: 'impact' }
 ];
 
   return (
@@ -46,28 +39,12 @@ const Header = ({ scrollPosition, onNavigate }) => {
             <div className="w-10 h-10 bg-gradient-to-br from-accent-500 to-accent-600 rounded-lg flex items-center justify-center font-bold text-white">
               TG
             </div>
-            <div className="hidden sm:block">
-              <p className="font-display font-bold text-white">Trust Gain</p>
-              <p className="text-xs text-gray-400">Transparent Aid</p>
-            </div>
           </motion.div>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-1">
-            {navItems.map((item) => (
-              <motion.button
-                key={item.id}
-                onClick={() => onNavigate(item.id)}
-                className="px-4 py-2 text-gray-300 hover:text-white transition-colors duration-200 relative group"
-                whileHover={{ y: -2 }}
-              >
-                {item.label}
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-accent-500 group-hover:w-full transition-all duration-300" />
-              </motion.button>
-            ))}
-          </nav>
+          {/* Navigation */}
+          <NavMenu navItems={navItems} onNavigate={onNavigate} currentPath={typeof window !== 'undefined' ? window.location.pathname : 'home'} />
 
-          {/* Wallet, theme & menu */}
+          {/* Theme & menu toggle */}
           <div className="flex items-center gap-2">
             <motion.button
               onClick={toggleTheme}
@@ -77,29 +54,6 @@ const Header = ({ scrollPosition, onNavigate }) => {
               whileTap={{ scale: 0.95 }}
             >
               {theme === 'light' ? <Sun size={18} /> : <Moon size={18} />}
-            </motion.button>
-
-            <motion.button
-              onClick={handleWalletToggle}
-              className={`hidden sm:flex items-center gap-2 px-4 py-2.5 rounded-lg font-semibold transition-all duration-200 ${
-                walletConnected
-                  ? 'bg-accent-500/20 text-accent-100 border border-accent-500/30'
-                  : 'bg-accent-500 text-white hover:bg-accent-600'
-              }`}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              {walletConnected ? (
-                <>
-                  <LogOut size={18} />
-                  {truncateAddress(walletAddress)}
-                </>
-              ) : (
-                <>
-                  <Wallet size={18} />
-                  Connect Wallet
-                </>
-              )}
             </motion.button>
 
             {/* Mobile Menu Button */}
@@ -133,27 +87,6 @@ const Header = ({ scrollPosition, onNavigate }) => {
                 {item.label}
               </button>
             ))}
-            <motion.button
-              onClick={handleWalletToggle}
-              className={`w-full mt-4 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-semibold transition-all duration-200 ${
-                walletConnected
-                  ? 'bg-accent-500/20 text-accent-100 border border-accent-500/30'
-                  : 'bg-accent-500 text-white hover:bg-accent-600'
-              }`}
-              whileTap={{ scale: 0.95 }}
-            >
-              {walletConnected ? (
-                <>
-                  <LogOut size={18} />
-                  Disconnect
-                </>
-              ) : (
-                <>
-                  <Wallet size={18} />
-                  Connect Wallet
-                </>
-              )}
-            </motion.button>
           </motion.div>
         )}
       </div>

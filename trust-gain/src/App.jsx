@@ -9,6 +9,10 @@ import TransactionHistory from './pages/TransactionHistory';
 import WalletConnect from './pages/WalletConnect';
 import useStore from './store';
 import Analytics from './pages/Analytics';
+import DonationCheckout from './pages/DonationCheckout';
+import ValidatorDashboard from './pages/ValidatorDashboard';
+import BeneficiaryPortal from './pages/BeneficiaryPortal';
+import { DemoOne } from './demo-nav';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
@@ -23,6 +27,13 @@ function App() {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const store = useStore.getState();
+    if (store.initWalletListeners) {
+      store.initWalletListeners();
+    }
   }, []);
 
   useEffect(() => {
@@ -50,7 +61,7 @@ function App() {
       case 'dashboard':
         return <Dashboard />;
       case 'donate':
-        return <DisasterCards />;
+        return <DisasterCards onNavigate={setCurrentPage} />;
       case 'impact':
         return <TransactionHistory />;
       case 'transparency':
@@ -58,7 +69,15 @@ function App() {
       case 'wallet':
         return <WalletConnect />;
         case 'analytics':
-  return <Analytics />;
+          return <Analytics />;
+      case 'demo-nav':
+          return <DemoOne />;
+      case 'checkout':
+          return <DonationCheckout onNavigate={setCurrentPage} />;
+      case 'validator':
+          return <ValidatorDashboard />;
+      case 'beneficiary':
+          return <BeneficiaryPortal />;
       default:
         return <Landing onNavigate={setCurrentPage} />;
     }

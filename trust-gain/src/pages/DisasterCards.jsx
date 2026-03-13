@@ -4,35 +4,9 @@ import { useState } from 'react';
 import useStore from '../store';
 import { useAnimationVariants } from '../hooks';
 
-const DisasterCards = () => {
-  const { disasters, addDonation, walletConnected } = useStore();
-  const [selectedDisaster, setSelectedDisaster] = useState(null);
-  const [donationAmount, setDonationAmount] = useState('');
+const DisasterCards = ({ onNavigate }) => {
+  const { disasters, setSelectedDisaster } = useStore();
   const variants = useAnimationVariants();
-
-  const handleDonate = (disaster) => {
-    if (!walletConnected) {
-      alert('Please connect your wallet first');
-      return;
-    }
-
-    if (donationAmount && parseFloat(donationAmount) > 0) {
-      const newDonation = {
-        id: Date.now(),
-        amount: parseFloat(donationAmount),
-        timestamp: new Date().toISOString(),
-        disaster: disaster.name,
-        status: 'pending',
-        txHash: '0x' + Math.random().toString(16).slice(2),
-        impactMetrics: { peopleHelped: Math.floor(Math.random() * 20), supplies: 1 }
-      };
-
-      addDonation(newDonation);
-      setDonationAmount('');
-      setSelectedDisaster(null);
-      alert('Donation submitted! Check your transaction history.');
-    }
-  };
 
   const getUrgencyColor = (urgency) => {
     switch (urgency) {
@@ -163,6 +137,7 @@ const DisasterCards = () => {
                 onClick={(e) => {
                   e.stopPropagation();
                   setSelectedDisaster(disaster);
+                  onNavigate('checkout');
                 }}
                 className="w-full px-6 py-3 bg-accent-500 hover:bg-accent-600 text-white font-semibold rounded-lg transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-glow flex items-center justify-center gap-2"
                 whileTap={{ scale: 0.95 }}
@@ -173,84 +148,6 @@ const DisasterCards = () => {
             </motion.div>
           ))}
         </motion.div>
-
-        {/* Donation Modal */}
-        {selectedDisaster && (
-          <motion.div
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setSelectedDisaster(null)}
-          >
-            <motion.div
-              className="bg-white/5 backdrop-blur-glass border border-white/10 rounded-2xl overflow-hidden max-w-md w-full p-8 space-y-6"
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.8, opacity: 0 }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="space-y-2">
-                <h2 className="text-3xl font-bold">{selectedDisaster.name}</h2>
-                <p className="text-gray-400">{selectedDisaster.description}</p>
-              </div>
-
-              <div className="bg-white/5 backdrop-blur-glass border border-white/10 rounded-lg p-4 space-y-2">
-                <p className="text-sm text-gray-400">Donation Amount (ETH)</p>
-                <input
-                  type="number"
-                  step="0.01"
-                  placeholder="Enter amount"
-                  value={donationAmount}
-                  onChange={(e) => setDonationAmount(e.target.value)}
-                  className="input-glass w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-accent-500/50 focus:bg-white/10 transition-all duration-200"
-                />
-                <div className="flex gap-2 pt-2">
-                  {[0.1, 0.5, 1.0, 2.0].map((amount) => (
-                    <motion.button
-                      key={amount}
-                      onClick={() => setDonationAmount(amount.toString())}
-                      className="flex-1 px-3 py-2 bg-white/10 hover:bg-accent-500/20 text-white rounded text-sm font-semibold transition-colors"
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      {amount}
-                    </motion.button>
-                  ))}
-                </div>
-              </div>
-
-              <motion.div
-                className="bg-accent-500/10 border border-accent-500/20 rounded-lg p-4 space-y-2"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-              >
-                <p className="text-sm text-gray-400">Estimated Impact</p>
-                <p className="text-2xl font-bold text-white">
-                  ~{donationAmount ? (parseFloat(donationAmount) * 10).toFixed(0) : 0} people helped
-                </p>
-              </motion.div>
-
-              <div className="flex gap-4">
-                <motion.button
-                  onClick={() => setSelectedDisaster(null)}
-                  className="flex-1 px-6 py-3 bg-white/10 hover:bg-white/20 text-white font-semibold rounded-lg border border-white/20 transition-all duration-200"
-                  whileTap={{ scale: 0.95 }}
-                >
-                  Cancel
-                </motion.button>
-                <motion.button
-                  onClick={() => handleDonate(selectedDisaster)}
-                  className="flex-1 px-6 py-3 bg-accent-500 hover:bg-accent-600 text-white font-semibold rounded-lg transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-glow flex items-center justify-center gap-2"
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Heart size={18} />
-                  Donate
-                </motion.button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
       </div>
     </div>
   );
