@@ -1,0 +1,388 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+@layer base {
+  body {
+    @apply bg-dark-900 text-gray-100 font-sans overflow-x-hidden;
+  }
+
+  h1 {
+    @apply font-display font-bold text-4xl md:text-5xl tracking-tight;
+  }
+
+  h2 {
+    @apply font-display font-bold text-2xl md:text-3xl;
+  }
+
+  h3 {
+    @apply font-display font-semibold text-xl;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-white/5 backdrop-blur-glass border border-white/10 rounded-2xl overflow-hidden;
+  }
+
+  .glass-card-hover {
+    @apply glass-card transition-all duration-300 hover:bg-white/10 hover:border-accent-500/30 hover:shadow-glow;
+  }
+
+  .gradient-border {
+    @apply relative before:absolute before:inset-0 before:bg-gradient-to-r before:from-accent-500 before:via-accent-600 before:to-transparent before:opacity-0 hover:before:opacity-100 before:transition-opacity before:duration-300;
+  }
+
+  .btn-primary {
+    @apply px-6 py-3 bg-accent-500 hover:bg-accent-600 text-white font-semibold rounded-lg transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-glow;
+  }
+
+  .btn-secondary {
+    @apply px-6 py-3 bg-white/10 hover:bg-white/20 text-white font-semibold rounded-lg border border-white/20 transition-all duration-200;
+  }
+
+  .btn-ghost {
+    @apply px-6 py-3 text-gray-300 hover:text-white transition-colors duration-200 hover:bg-white/5 rounded-lg;
+  }
+
+  .stat-card {
+    @apply glass-card p-6 space-y-2;
+  }
+
+  .input-glass {
+    @apply bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-accent-500/50 focus:bg-white/10 transition-all duration-200;
+  }
+
+  .badge {
+    @apply inline-flex items-center gap-1.5 px-3 py-1.5 bg-accent-500/20 text-accent-100 rounded-full text-xs font-semibold border border-accent-500/30;
+  }
+
+  .badge-success {
+    @apply inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-500/20 text-emerald-100 rounded-full text-xs font-semibold border border-emerald-500/30;
+  }
+
+  .text-gradient {
+    @apply bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent;
+  }
+
+  .divider-glass {
+    @apply border-t border-white/5;
+  }
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar - Dark Mode */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 26, 26, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 26, 26, 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 26, 26, 0.5);
+}
+
+/* Animations */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(255, 26, 26, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(255, 26, 26, 0.5);
+  }
+}
+
+@keyframes slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ==================== LIGHT MODE START ==================== */
+
+.light {
+  color-scheme: light;
+  background-color: #ffffff;
+  color: #1a1a1a;
+}
+
+.light body {
+  background-color: #ffffff;
+  color: #1a1a1a;
+}
+
+.light h1,
+.light h2,
+.light h3,
+.light h4,
+.light h5,
+.light h6 {
+  color: #1a1a1a;
+}
+
+.light p,
+.light span {
+  color: #4b5563;
+}
+
+/* Glass Cards Light Mode */
+.light .glass-card {
+  background-color: #f8f9fa;
+  border-color: #e0e0e0;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.light .glass-card:hover {
+  background-color: #f0f2f5;
+  border-color: rgba(255, 26, 26, 0.5);
+  box-shadow: 0 8px 25px rgba(255, 26, 26, 0.15);
+}
+
+/* Buttons Light Mode */
+.light .btn-primary {
+  background-color: #ff1a1a;
+  color: #ffffff;
+  box-shadow: 0 4px 15px rgba(255, 26, 26, 0.3);
+}
+
+.light .btn-primary:hover {
+  background-color: #ff0000;
+  box-shadow: 0 6px 20px rgba(255, 26, 26, 0.4);
+}
+
+.light .btn-secondary {
+  background-color: #f0f0f0;
+  color: #1a1a1a;
+  border-color: #d0d0d0;
+}
+
+.light .btn-secondary:hover {
+  background-color: #e0e0e0;
+  border-color: rgba(255, 26, 26, 0.5);
+}
+
+.light .btn-ghost {
+  color: #4b5563;
+}
+
+.light .btn-ghost:hover {
+  color: #ff1a1a;
+  background-color: #f0f0f0;
+}
+
+/* Input Fields Light Mode */
+.light .input-glass {
+  background-color: #ffffff;
+  border-color: #d0d0d0;
+  color: #1a1a1a;
+}
+
+.light .input-glass::placeholder {
+  color: #a0a0a0;
+}
+
+.light .input-glass:focus {
+  background-color: #f8f9fa;
+  border-color: #ff1a1a;
+  box-shadow: 0 0 0 3px rgba(255, 26, 26, 0.1);
+}
+
+/* Stat Cards Light Mode */
+.light .stat-card {
+  background-color: #f8f9fa;
+  border-color: #e0e0e0;
+}
+
+/* Badges Light Mode */
+.light .badge {
+  background-color: #ffe6e6;
+  color: #cc0000;
+  border-color: #ffcccc;
+}
+
+.light .badge-success {
+  background-color: #dcfce7;
+  color: #166534;
+  border-color: #b7e4c7;
+}
+
+/* Header Light Mode */
+.light header {
+  background-color: rgba(255, 255, 255, 0.95);
+  border-bottom-color: #e0e0e0;
+}
+
+/* Footer Light Mode */
+.light footer {
+  background-color: #f8f9fa;
+  border-top-color: #e0e0e0;
+}
+
+/* Backgrounds Light Mode */
+.light .bg-white\/5 {
+  background-color: #f0f0f0;
+}
+
+.light .bg-white\/10 {
+  background-color: #e0e0e0;
+}
+
+.light .bg-white\/20 {
+  background-color: #d0d0d0;
+}
+
+.light .bg-dark-900\/5 {
+  background-color: #f8f9fa;
+}
+
+.light .bg-dark-900\/10 {
+  background-color: #f0f2f5;
+}
+
+/* Borders Light Mode */
+.light .border-white\/5 {
+  border-color: #f0f0f0;
+}
+
+.light .border-white\/10 {
+  border-color: #e0e0e0;
+}
+
+.light .border-white\/20 {
+  border-color: #d0d0d0;
+}
+
+.light .border-dark-900\/5 {
+  border-color: #f8f9fa;
+}
+
+.light .border-dark-900\/10 {
+  border-color: #f0f2f5;
+}
+
+/* Hover States Light Mode */
+.light .hover\:bg-white\/10:hover {
+  background-color: #e0e0e0;
+}
+
+.light .hover\:bg-white\/20:hover {
+  background-color: #d0d0d0;
+}
+
+.light .hover\:border-accent-500\/30:hover {
+  border-color: rgba(255, 26, 26, 0.5);
+}
+
+/* Text Colors Light Mode */
+.light .text-gray-300 {
+  color: #6b7280;
+}
+
+.light .text-gray-400 {
+  color: #9ca3af;
+}
+
+.light .text-gray-500 {
+  color: #6b7280;
+}
+
+.light .text-accent-100 {
+  color: #cc0000;
+}
+
+/* Divider Light Mode */
+.light .divider-glass {
+  border-top-color: #e0e0e0;
+}
+
+/* Modal Overlay Light Mode */
+.light .fixed.inset-0.bg-black\/50 {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+/* Special Accents Light Mode */
+.light .bg-accent-500\/10 {
+  background-color: #ffe6e6;
+}
+
+.light .bg-accent-500\/20 {
+  background-color: #ffcccc;
+}
+
+.light .border-accent-500 {
+  border-color: #ff1a1a;
+}
+
+.light .border-accent-500\/20 {
+  border-color: rgba(255, 26, 26, 0.2);
+}
+
+.light .border-accent-500\/30 {
+  border-color: rgba(255, 26, 26, 0.3);
+}
+
+/* Scrollbar Light Mode */
+.light ::-webkit-scrollbar-track {
+  background-color: #f0f0f0;
+}
+
+.light ::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 26, 26, 0.3);
+}
+
+.light ::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 26, 26, 0.6);
+}
+
+/* Smooth Transitions */
+.light * {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* ==================== LIGHT MODE END ==================== */
