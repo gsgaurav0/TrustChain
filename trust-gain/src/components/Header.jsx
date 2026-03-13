@@ -3,10 +3,20 @@ import { Menu, X, Sun, Moon } from 'lucide-react';
 import { useState } from 'react';
 import useStore from '../store';
 import NavMenu from './ui/menu-hover-effects';
+import { truncateAddress } from '../hooks';
+import { Wallet, LogOut } from 'lucide-react';
 
 const Header = ({ scrollPosition, onNavigate }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { toggleTheme, theme } = useStore();
+  const { toggleTheme, theme, walletConnected, walletAddress, connectWallet, disconnectWallet } = useStore();
+
+  const handleWalletToggle = () => {
+    if (walletConnected) {
+      disconnectWallet();
+    } else {
+      connectWallet();
+    }
+  };
 
   const navItems = [
   { label: 'Dashboard', id: 'dashboard' },
@@ -87,6 +97,32 @@ const Header = ({ scrollPosition, onNavigate }) => {
                 {item.label}
               </button>
             ))}
+            {/* Mobile Wallet Button */}
+            <div className="px-4 pt-2 pb-1">
+              <button
+                onClick={() => {
+                  handleWalletToggle();
+                  setMobileMenuOpen(false);
+                }}
+                className={`w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-semibold text-sm transition-all duration-300 ${
+                  walletConnected
+                    ? 'bg-accent-500/10 text-accent-100 border border-accent-500/30'
+                    : 'bg-accent-500 text-white'
+                }`}
+              >
+                {walletConnected ? (
+                  <>
+                    <LogOut size={16} />
+                    {truncateAddress(walletAddress)}
+                  </>
+                ) : (
+                  <>
+                    <Wallet size={16} />
+                    Connect Wallet
+                  </>
+                )}
+              </button>
+            </div>
           </motion.div>
         )}
       </div>

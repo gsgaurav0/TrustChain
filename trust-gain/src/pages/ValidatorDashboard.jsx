@@ -126,19 +126,19 @@ const ValidatorDashboard = () => {
             return (
               <motion.div 
                 key={payout.id}
-                className={`bg-white/5 border ${isReady ? 'border-emerald-500/30' : 'border-white/10'} backdrop-blur-glass rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-8 transition-colors`}
+                className={`bg-white/5 border ${isReady ? 'border-emerald-500/30' : 'border-white/10'} backdrop-blur-glass rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-8 transition-colors`}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
               >
                 <div className="space-y-4 flex-1 w-full">
-                  <div className="flex justify-between items-start">
+                  <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
                     <div>
                       <h3 className="text-2xl font-bold text-white">{payout.campaign}</h3>
-                      <p className="text-accent-400 font-mono text-sm mt-1">ID: {payout.id.substring(0, 16)}...</p>
+                      <p className="text-accent-400 font-mono text-sm mt-1 break-all">ID: {payout.id.substring(0, 16)}...</p>
                     </div>
-                    <div className="text-right">
+                    <div className="text-left sm:text-right">
                       <p className="text-3xl font-bold text-white">{payout.amount} ETH</p>
-                      <p className="text-gray-400 text-sm">Target: {payout.recipient}</p>
+                      <p className="text-gray-400 text-sm break-all">Target: {payout.recipient}</p>
                     </div>
                   </div>
 

@@ -1,10 +1,8 @@
-import { useState } from 'react';
 import useStore from '../../store';
 import { Wallet, LogOut } from 'lucide-react';
 import { truncateAddress } from '../../hooks';
 
 export default function NavMenu({ navItems, onNavigate, currentPath }) {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { walletConnected, walletAddress, connectWallet, disconnectWallet } = useStore();
   
   const handleWalletToggle = () => {
@@ -14,42 +12,18 @@ export default function NavMenu({ navItems, onNavigate, currentPath }) {
       connectWallet();
     }
   };
-  
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
 
   return (
-    <nav className="relative w-full z-50">
-      {/* Mobile menu toggle button - only visible on small screens */}
-      <button 
-        onClick={toggleMenu}
-        className="md:hidden absolute top-6 right-6 z-20 p-2 text-white"
-        aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-      >
-        <div className={`w-6 h-0.5 bg-current mb-1.5 transition-transform duration-300 ${isMenuOpen ? 'transform rotate-45 translate-y-2' : ''}`}></div>
-        <div className={`w-6 h-0.5 bg-current mb-1.5 transition-opacity duration-300 ${isMenuOpen ? 'opacity-0' : ''}`}></div>
-        <div className={`w-6 h-0.5 bg-current transition-transform duration-300 ${isMenuOpen ? 'transform -rotate-45 -translate-y-2' : ''}`}></div>
-      </button>
-      
-      {/* Menu container - adapts to screen size */}
-      <div className={`
-        flex items-center justify-center w-full
-        md:block md:w-auto
-        ${isMenuOpen ? 'block absolute top-16 left-0 right-0 bg-dark-900/95 backdrop-blur shadow-glass py-4 rounded-b-xl border border-white/10 border-t-0' : 'hidden md:block'}
-      `}>
-        <ul className={`
-          flex flex-col items-center space-y-4
-          md:flex-row md:space-y-0 md:space-x-1 md:justify-center
-          lg:space-x-2
-        `}>
+    <nav className="hidden md:block w-full z-50">
+      {/* Menu container */}
+      <div className="flex items-center justify-center w-full md:w-auto">
+        <ul className="flex items-center space-x-1 lg:space-x-2">
           {navItems.map((item) => (
-            <li key={item.id} className="list-none w-full md:w-auto text-center">
+            <li key={item.id} className="list-none w-auto text-center">
               <button 
-                className="relative inline-block group w-full px-4 py-2"
+                className="relative inline-block group px-4 py-2"
                 onClick={() => {
                   onNavigate(item.id);
-                  setIsMenuOpen(false);
                 }}
               >
                 {/* Link text */}
@@ -81,11 +55,10 @@ export default function NavMenu({ navItems, onNavigate, currentPath }) {
             </li>
           ))}
           {/* Injected Wallet Button */}
-          <li className="list-none w-full md:w-auto text-center ml-0 md:ml-4 mt-4 md:mt-0">
+          <li className="list-none w-auto text-center ml-4">
              <button
               onClick={() => {
                  handleWalletToggle();
-                 setIsMenuOpen(false);
               }}
               className={`flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-300 w-full ${
                 walletConnected
